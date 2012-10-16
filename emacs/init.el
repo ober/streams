@@ -19,11 +19,10 @@
 
 
 
-(defun myput () (interactive) (shell-command (format "ATLASSIAN_PASSWORD=\"%s\" /home/jaimef/.emacs.d/C/cc push \"%s\"" identica-jira-password buffer-file-name)))
+(defun myput () (interactive) (shell-command (format "ATLASSIAN_PASSWORD=\"%s\" ~/streams/streams push \"%s\"" identica-jira-password buffer-file-name)))
 (global-set-key [(f7)]  'myput)
-(defun myget () (interactive) (shell-command (format "ATLASSIAN_PASSWORD=\"%s\" /home/jaimef/.emacs.d/C/cc pull \"%s\"" identica-jira-password buffer-file-name) (revert-buffer t t nil)) (nxml-mode))
-(defun my-fetch-all () (interactive) (shell-command (format "ATLASSIAN_PASSWORD=\"%s\" /home/jaimef/.emacs.d/C/cc fetchall &" identica-jira-password)))
-
+(defun myget () (interactive) (shell-command (format "ATLASSIAN_PASSWORD=\"%s\" ~/streams/streams pull \"%s\"" identica-jira-password buffer-file-name) (revert-buffer t t nil)) (nxml-mode))
+(defun my-fetch-all () (interactive) (shell-command (format "ATLASSIAN_PASSWORD=\"%s\" ~/streams/streams fetchall &" identica-jira-password)))
 
 (global-set-key [(f7)]  'myput)
 (global-set-key [(f8)]  'myget)
