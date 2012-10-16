@@ -1,0 +1,2 @@
+Patch to make Confluence CLI use nailgun
+Greatly increases the speed for frequent pushes and pulls

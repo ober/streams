@@ -1,0 +1,18 @@
+Requires tidy package to cleanup one line xml from Confluence
+
+
+
+
+I create a secrets.el.pgp to containing
+
+
+
+(setq
+ identica-jira-password "magicpassw0rd"
+ jira-username "myusername"
+ jira-password "mypassw0rd"
+ jira-rest-endpoint "confluence server location"
+)
+
+Then M-x start-identica
+Once decoded I can pull/push via f7/f8 myget/mypush

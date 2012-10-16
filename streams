@@ -1,0 +1,142 @@
+#!/bin/bash
+
+#
+# Script to wrap confluence cli to push/pull documents.
+#
+
+trap 'trap - EXIT; handle_error; ' ERR
+
+# Defines required for the CLI. Can be set in ~/.streams.cfg
+
+#server="https://mycompany.atlassian.net/wiki" # Your Confluence Server url to confluence.
+#user="joesmoe" # What is your confluence username.
+#docroot="${HOME}/confluence/" # Where do you want your docs created. Each project will create subdir.
+#ccli="${HOME}//confluence-cli-2.6.0/" # Path to the Confluence Cli directory. Must contain confluence.sh
+
+cfg="${HOME}/.streams.cfg"
+ccli=$(dirname $0)/confluence-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
+
+action=$1
+shift
+
+if [[ -f "$cfg" ]]; then
+    source "$cfg"
+fi
+
+function handle_error {
+    echo "Error hit"
+    exit 2
+}
+
+function usage {
+    cat <<EOF
+Usage:
+    ${0} <action>
+
+actions:
+--------------------------------------------------------------------------------------
+push: Push a document to
+pull:
+fetch-all:
+EOF
+}
+
+function ensure_not_empty {
+    variable="$1"
+    message="$2"
+
+    if [[ X${variable}X = XX ]]; then
+        echo "${message}"
+        exit 2
+    fi
+}
+
+if [[ -n "${ATLASSIAN_PASSWORD}" ]]; then
+    password="${ATLASSIAN_PASSWORD}"
+else
+    echo -n "Password: "
+    stty -echo
+    read password
+    stty echo
+fi
+
+ensure_not_empty "$password" "No password set in config or ENV."
+ensure_not_empty "$server" "No \$server defined. "
+ensure_not_empty "$user" "No \$user defined. This is your confluence userid"
+ensure_not_empty "$docroot" "No \$docroot defined. This is where we download confluence docs"
+ensure_not_empty "$ccli" "No \$ccli set. This is the full path to the parent directory of confluence.sh (the confluence-cli) directory"
+
+# check if java/nailgun is running, if not launch.
+if [[ X$(ps auxwwww|grep -i NGServer|grep -v grep)X == XX ]]; then
+    echo "starting nailgun"
+    cd /usr/share/java && nohup java -server com.martiansoftware.nailgun.NGServer &
+    sleep 5
+fi
+
+export IFS="
+"
+
+function fetch-all {
+    for project in $(ls -F ${docroot}|grep /|tr -d "/"); do
+        echo "Project: ${project}"
+        for doc in $(${ccli}/confluence.sh --action getPageList --space "${project}" -u ${user} -p ${password} -s ${server}|grep -Ev "^$|pages in list"); do
+            echo "Doc: ${doc}"
+            ${ccli}/confluence.sh --action getPageSource --space "${project}" --title "${doc}" -u ${user} -p ${password} -s ${server} |grep -v "^Page source$" > ${docroot}/${project}/"${doc/\//}"
+        done
+    done
+    #cd ${docroot} && git add * && git commit -m "Update to $(date)" -a # if you wish to keep a local git copy
+}
+
+function list {
+    ${ccli}/confluence.sh --action getSpaceList -u ${user} -p ${password} -s ${server}
+}
+
+function list_docs_by_project {
+    ${ccli}/confluence.sh --action getPageList --space "ops" -u ${user} -p ${password} -s ${server}|grep -Ev "^$|pages in list"
+}
+
+function pull {
+    filename="${1##*/}"
+    a="${1%*/*}"
+    project="${a##*/}"
+
+    if [[ X${filename}X != XX ]]; then
+        ${ccli}/confluence.sh --action getPageSource --space "${project}" --title "${filename}" -u ${user} -p ${password} -s ${server} |grep -v "^Page source$" > ${docroot}/${project}/"${filename}"
+    fi
+}
+
+function get_parent_page {
+    echo "foo"
+}
+
+function push {
+    filename="${1##*/}"
+    a="${1%*/*}"
+    project="${a##*/}"
+
+    if [[ X${project}X = XrbX ]]; then
+        parent="Runbook Home"
+    fi
+
+    if [[ X${project}X = XopsX ]]; then
+        parent="Operations Home"
+    fi
+
+    if [[ X${filename}X != XX ]]; then
+        echo "Put: project:${project} filename:${filename}"
+        ${ccli}/confluence.sh --action storePage --space "${project}" --title "${filename}" --file "$2" -u ${user} -p ${password} -s ${server} --noConvert --parent "${parent}"
+    else
+        echo "No such file ${filename} in ${project}"
+    fi
+}
+
+case "${action}" in
+    push)
+        push $@;;
+    pull)
+        pull $@;;
+    fetch-all)
+        fetch-all $@;;
+    *)
+        usage;;
+esac
