@@ -18,7 +18,7 @@
    streams/streams fetch-all
 #+END_SRC
 
-** Once all documents have been checked out, you can then push/pull
+*** Once all documents have been checked out, you can then push/pull
 *** Example pushing a doc
 #+BEGIN_SRC bash
    vim $docroot/$project/Some File in Confluence
