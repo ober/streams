@@ -1,15 +1,35 @@
-streams
-=======
+* streams: Confluence API wrapper for pull/publish from emacs/vim/cli
 
-Confluence API wrapper for pull/publish from emacs/vim
 
-** Wrapper script for confluence cli.
-** Download from and unzip in streams directory.
-** https://bobswift.atlassian.net/wiki/download/attachments/16285777/crucible-cli-2.6.0-distribution.zip
+** Requirements:
+   - Download the Atlassian Confluence CLI at
+   https://bobswift.atlassian.net/wiki/download/attachments/16285777/crucible-cli-2.6.0-distribution.zip
 
+   - Unzip it in the streams/ directory so that ${ccli} finds it. Otherwise set ${ccli} accordingly.
 
 ** Fetch all documents belonging to a project.
-*** Example I want to checkout all documents from ops to local $docroot.
+   - To checkout all documents in a project called "Operations" with the short name of "ops"
+   - We simpley
+#+BEGIN_SRC bash
+   mkdir $docroot/ops
+   streams/streams fetch-all
+#+END_SRC
 
-
-** To use define your $docroot and create directories under the docroot you wish to fetch with fetch-all
+** Once all documents have been checked out, you can then push/pull
+   *** Example pushing a doc
+#+BEGIN_SRC bash
+   vim $docroot/$project/Some File in Confluence
+   ATLASSIAN_PASSWORD="t00manys3crets" streams/streams push $docroot/$project/Some File in Confluence
+#+END_SRC
+   *** Example of pulling latest
+#+BEGIN_SRC bash
+   vim $docroot/$project/Some File in Confluence
+   ATLASSIAN_PASSWORD="t00manys3crets" streams/streams pull $docroot/$project/Some File in Confluence
+#+END_SRC
+   *** Cleaning up the XML to be human editable
+   - When pulling docs from Confluence you may end up with a giant line of xml.
+   - Tidy seems to handle the the xml fine without stripping unknown tags.
+   - An example tidyrc is provided that should be copied to ${HOME}/.tidyrc to use.
+#+BEGIN_SRC bash
+   tidy $docroot/$project/Some File in Confluence
+#+END_SRC
