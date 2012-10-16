@@ -7,9 +7,12 @@
 
    - Unzip it in the streams/ directory so that ${ccli} finds it. Otherwise set ${ccli} accordingly.
 
+** Notes in password.
+   - The ATLASSIAN_PASSWORD does not have to be set, and you will be prompted for it.
+   - If you using emacs/vim wrappers it's not required.
 ** Fetch all documents belonging to a project.
    - To checkout all documents in a project called "Operations" with the short name of "ops"
-   - We simpley
+   - We simply
 #+BEGIN_SRC bash
    mkdir $docroot/ops
    streams/streams fetch-all
@@ -32,4 +35,9 @@
    - An example tidyrc is provided that should be copied to ${HOME}/.tidyrc to use.
 #+BEGIN_SRC bash
    tidy $docroot/$project/Some File in Confluence
+#+END_SRC
+   *** To add new files to a Confluence Project just create the new file:
+#+BEGIN_SRC bash
+   vim $docroot/$project/Some new file
+   ATLASSIAN_PASSWORD="t00manys3crets" streams/streams push $docroot/$project/Some new file
 #+END_SRC
