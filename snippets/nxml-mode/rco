@@ -1,0 +1,10 @@
+# contributor: Anders Bach Nielsen <abachn@abachn.net>
+# name: <code>...</code>
+# key: rco
+# --
+<ac:macro ac:name="code">
+  <ac:parameter ac:name="language">ruby</ac:parameter>
+  <ac:plain-text-body>
+    <![CDATA[ $0 ]]>
+</ac:plain-text-body>
+</ac:macro>

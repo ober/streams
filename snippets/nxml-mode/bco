@@ -1,0 +1,10 @@
+# contributor: Anders Bach Nielsen <abachn@abachn.net>
+# name: bash confluence
+# key: bco
+# --
+<ac:macro ac:name="code">
+  <ac:parameter ac:name="language">bash</ac:parameter>
+  <ac:plain-text-body>
+    <![CDATA[ $1 ]]>
+</ac:plain-text-body>
+</ac:macro>

@@ -1,0 +1,9 @@
+# contributor: Anders Bach Nielsen <abachn@abachn.net>
+# name: cli confluence link
+# key: cli
+# --
+<p>
+<ac:link>
+  <ri:page ri:content-title="$0" />
+  </ac:link>
+</p>
