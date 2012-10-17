@@ -35,9 +35,9 @@ Usage:
 
 actions:
 --------------------------------------------------------------------------------------
-push: Push a document to
-pull:
-fetch-all:
+push: Push a document to Confluence
+pull: Pull a document from Confluence
+fetch-all:Fetch all documents from a project
 EOF
 }
 
