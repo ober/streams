@@ -105,8 +105,14 @@ function pull {
     fi
 }
 
-function get_parent_page {
-    echo "foo"
+function get_space_info {
+    filename="${1##*/}"
+    a="${1%*/*}"
+    project="${a##*/}"
+
+    if [[ X${filename}X != XX ]]; then
+        echo $(${ccli}/confluence.sh --action getSpace --space "${project}" -u ${user} -p ${password} -s ${server})
+    fi
 }
 
 function push {
@@ -114,17 +120,11 @@ function push {
     a="${1%*/*}"
     project="${a##*/}"
 
-    if [[ X${project}X = XrbX ]]; then
-        parent="Runbook Home"
-    fi
-
-    if [[ X${project}X = XopsX ]]; then
-        parent="Operations Home"
-    fi
+    parent="$(get_space_info $@|awk '{print $4}'|tr -d ";") Home"
 
     if [[ X${filename}X != XX ]]; then
         echo "Put: project:${project} filename:${filename}"
-        ${ccli}/confluence.sh --action storePage --space "${project}" --title "${filename}" --file "$2" -u ${user} -p ${password} -s ${server} --noConvert --parent "${parent}"
+        ${ccli}/confluence.sh --action storePage --space "${project}" --title "${filename}" --file "$1" -u ${user} -p ${password} -s ${server} --noConvert --parent "${parent}"
     else
         echo "No such file ${filename} in ${project}"
     fi
@@ -137,6 +137,8 @@ case "${action}" in
         pull $@;;
     fetch-all)
         fetch-all $@;;
+    get-space-info)
+        get_space_info $@;;
     *)
         usage;;
 esac
