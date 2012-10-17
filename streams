@@ -11,10 +11,10 @@ trap 'trap - EXIT; handle_error; ' ERR
 #server="https://mycompany.atlassian.net/wiki" # Your Confluence Server url to confluence.
 #user="joesmoe" # What is your confluence username.
 #docroot="${HOME}/confluence/" # Where do you want your docs created. Each project will create subdir.
-#ccli="${HOME}/streams/confluence-cli-2.6.0/" # Path to the Confluence Cli directory. Must contain confluence.sh
+ccli=$(dirname $0)/confluence-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
 
 cfg="${HOME}/.streams.cfg"
-ccli=$(dirname $0)/confluence-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
+
 
 action=$1
 shift
