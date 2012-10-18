@@ -1,13 +1,13 @@
 * streams: Confluence API wrapper for pull/publish from emacs/vim/cli
 
-
+* Confluence
 ** Requirements:
    - Download the Atlassian Confluence CLI at
    https://bobswift.atlassian.net/wiki/download/attachments/16285777/crucible-cli-2.6.0-distribution.zip
 
    - Unzip it in the streams/ directory so that ${ccli} finds it. Otherwise set ${ccli} accordingly.
 
-** Notes in password.
+** Notes on password.
    - The ATLASSIAN_PASSWORD does not have to be set, and you will be prompted for it.
    - If you using emacs/vim wrappers it's not required.
 ** Fetch all documents belonging to a project.
@@ -41,3 +41,6 @@
    vim $docroot/$project/Some new file
    ATLASSIAN_PASSWORD="t00manys3crets" streams/streams push $docroot/$project/Some new file
 #+END_SRC
+
+* Jira
+** Requirements

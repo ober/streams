@@ -12,6 +12,7 @@ trap 'trap - EXIT; handle_error; ' ERR
 #user="joesmoe" # What is your confluence username.
 #docroot="${HOME}/confluence/" # Where do you want your docs created. Each project will create subdir.
 ccli=$(dirname $0)/confluence-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
+jcli=$(dirname $0)/jira-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
 
 cfg="${HOME}/.streams.cfg"
 
@@ -130,6 +131,22 @@ function push {
     fi
 }
 
+function list_tickets {
+
+    project="Operations"
+    server=${server%*/*}
+    ${jcli}/jira.sh --action getIssueList -u ${user} --server ${server} -p ${password} --filter "my-tickets"
+
+#./jira.sh -a login -u ${user} --server ${server} -p ${password}
+# ./jira.sh --action getProject -u ${user} --server ${server} -p ${password} --project ${project}
+# ./jira.sh --action createIssue -u ${user} --server ${server} -p ${password} --project ${project} --type "task" --summary "Random ticket test ${RANDOM} ." --labels "remote cli"
+
+#./jira.sh --action progressIssue -u ${user} --server ${server} -p ${password} --project ${project} --issue "OP-3" --step "Start Progress" #--step "5" --resolution "Fixed" --fixVersions "V1, V2" --comment "I fixed this. \n It will be good now."
+#./jira.sh --action progressIssue -u ${user} --server ${server} -p ${password} --project ${project} --issue "OP-3" --step "Reopened" #--step "5" --resolution "Fixed" --fixVersions "V1, V2" --comment "I fixed this. \n It will be good now."
+# ./jira.sh --action progressIssue -u ${user} --server ${server} -p ${password} --project ${project} --issue "ZJIRACLI-3" --step "Start Progress"
+
+}
+
 case "${action}" in
     push)
         push $@;;
@@ -139,6 +156,8 @@ case "${action}" in
         fetch-all $@;;
     get-space-info)
         get_space_info $@;;
-    *)
+    list_tickets)
+        list_tickets  $@;;
+   *)
         usage;;
 esac
