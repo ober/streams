@@ -1,3 +1,7 @@
+# contributor: Jaime Fournier (ober@linbsd.org)
+# name: confluence link
+# key: ln
+# --
 <p>
 <ac:link>
   <ri:page ri:content-title=" $0 " />

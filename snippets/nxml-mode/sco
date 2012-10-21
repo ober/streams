@@ -1,5 +1,5 @@
-# contributor: Anders Bach Nielsen <abachn@abachn.net>
-# name: <code>...</code>
+# contributor: Jaime Fournier (ober@linbsd.org)
+# name: SQL Language block for Confluence
 # key: sco
 # --
 <ac:macro ac:name="code">
