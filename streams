@@ -11,6 +11,7 @@ trap 'trap - EXIT; handle_error; ' ERR
 #server="https://mycompany.atlassian.net/wiki" # Your Confluence Server url to confluence.
 #user="joesmoe" # What is your confluence username.
 #docroot="${HOME}/confluence/" # Where do you want your docs created. Each project will create subdir.
+#use_nailgun=YES
 ccli=$(dirname $0)/confluence-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
 jcli=$(dirname $0)/jira-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
 
@@ -67,11 +68,22 @@ ensure_not_empty "$user" "No \$user defined. This is your confluence userid"
 ensure_not_empty "$docroot" "No \$docroot defined. This is where we download confluence docs"
 ensure_not_empty "$ccli" "No \$ccli set. This is the full path to the parent directory of confluence.sh (the confluence-cli) directory"
 
+if [[ -n "$use_nailgun" ]]; then
 # check if java/nailgun is running, if not launch.
-if [[ X$(pgrep -lf nailgun)X == XX ]]; then
-    echo "starting nailgun"
-    nohup java -server -jar /usr/share/java/nailgun-0.7.1.jar &
-    sleep 5
+    if [[ X$(pgrep -lf nailgun)X == XX ]]; then
+
+        # Find the jar from the ng package.
+        if [[ X$(grep -E "Ubuntu|Debian" /etc/issue)X != XX ]]; then
+            jar=$(dpkg -L nailgun|grep "n-[0-9].[0-9].[0-9].jar")
+        fi
+        echo "starting nailgun with ${jar}"
+        if [[ -n "${jar}" ]]; then
+            nohup java -server -jar "${jar}" &
+            sleep 5
+        else
+            echo "use_nailgun set, but no jar found. OS/Distro supported?"
+        fi
+    fi
 fi
 
 export IFS="
