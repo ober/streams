@@ -70,7 +70,7 @@ ensure_not_empty "$ccli" "No \$ccli set. This is the full path to the parent dir
 # check if java/nailgun is running, if not launch.
 if [[ X$(ps auxwwww|grep -i NGServer|grep -v grep)X == XX ]]; then
     echo "starting nailgun"
-    cd /usr/share/java && nohup java -server com.martiansoftware.nailgun.NGServer &
+    cd /usr/share/java && nohup java -server -jar /usr/share/java/nailgun-0.7.1.jar &
     sleep 5
 fi
 
