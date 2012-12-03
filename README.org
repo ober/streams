@@ -3,8 +3,7 @@
 * Confluence
 ** Requirements:
    - Download the Atlassian Confluence CLI at
-   https://bobswift.atlassian.net/wiki/download/attachments/16285777/crucible-cli-2.6.0-distribution.zip
-
+   https://bobswift.atlassian.net/wiki/download/attachments/16285777/confluence-cli-3.0.0-distribution.zip?api=v2
    - Unzip it in the streams/ directory so that ${ccli} finds it. Otherwise set ${ccli} accordingly.
 
 ** Notes on password.
