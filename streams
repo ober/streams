@@ -12,7 +12,7 @@ trap 'trap - EXIT; handle_error; ' ERR
 #user="joesmoe" # What is your confluence username.
 #docroot="${HOME}/confluence/" # Where do you want your docs created. Each project will create subdir.
 #use_nailgun=YES
-ccli=$(dirname $0)/confluence-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
+ccli=$(dirname $0)/confluence-cli-3.0.0/ # Or set to your confluence directory containing confluence.sh
 jcli=$(dirname $0)/jira-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
 
 cfg="${HOME}/.streams.cfg"
