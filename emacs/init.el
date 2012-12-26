@@ -26,4 +26,4 @@
 
 (global-set-key [(f7)]  'myput)
 (global-set-key [(f8)]  'myget)
-(global-set-key [f9] 'mytidy)
+(global-set-key [(f9)] 'mytidy)
