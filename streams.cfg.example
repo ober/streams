@@ -1,5 +1,5 @@
 server="https://mycompany.atlassian.net/wiki" # Your Confluence Server
 user="joeblow" # What is your Username
 docroot="${HOME}/Conflence/" # Where do you want your docs created
-ccli="${HOME}/streams/confluence-cli-2.6.0/" # Where is your Confluence cli located
-use_nailgun=YES
+ccli="${HOME}/streams/confluence-cli-3.0.0/" # Where is your Confluence cli located
+use_nailgun="YES" # If set to anything is enabled, unset means disabled
