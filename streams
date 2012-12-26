@@ -92,10 +92,8 @@ function nailgun-setup {
                 fi
                 ;;
             "Linux"  )
-                if [[ XX$(grep -E "Ubuntu|Debian" /etc/issue)X != XX ]]; then
+                if [[ "$distro" == "Ubuntu" || "$distro" == "Debian" ]]; then
                     jar=$(dpkg -L nailgun|grep "n-[0-9].[0-9].[0-9].jar")
-                else
-                    "Nailgun setup to be used but not found. Please install"
                 fi
                 ;;
             "Cygwin" )
