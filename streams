@@ -11,12 +11,11 @@ trap 'trap - EXIT; handle_error; ' ERR
 #server="https://mycompany.atlassian.net/wiki" # Your Confluence Server url to confluence.
 #user="joesmoe" # What is your confluence username.
 #docroot="${HOME}/confluence/" # Where do you want your docs created. Each project will create subdir.
-#use_nailgun=YES
+#use_nailgun=YES # Set to something turns it on, otherwise unset it's disabled.
 ccli=$(dirname $0)/confluence-cli-3.0.0/ # Or set to your confluence directory containing confluence.sh
 jcli=$(dirname $0)/jira-cli-2.6.0/ # Or set to your confluence directory containing confluence.sh
 
 cfg="${HOME}/.streams.cfg"
-
 
 action=$1
 shift
@@ -43,6 +42,16 @@ fetch-all:Fetch all documents from a project
 EOF
 }
 
+function detect-os {
+    os="$(uname)"
+}
+
+function detect-distro {
+    if [[ X${os}X == XLinuxX ]]; then
+        distro="$(lsb_release -i|awk '{print $NF}')"
+    fi
+}
+
 function ensure_not_empty {
     variable="$1"
     message="$2"
@@ -67,24 +76,48 @@ ensure_not_empty "$server" "No \$server defined. "
 ensure_not_empty "$user" "No \$user defined. This is your confluence userid"
 ensure_not_empty "$docroot" "No \$docroot defined. This is where we download confluence docs"
 ensure_not_empty "$ccli" "No \$ccli set. This is the full path to the parent directory of confluence.sh (the confluence-cli) directory"
+detect-os
+detect-distro
 
-if [[ -n "$use_nailgun" ]]; then
-# check if java/nailgun is running, if not launch.
+function nailgun-setup {
     if [[ X$(pgrep -lf nailgun)X == XX ]]; then
-
         # Find the jar from the ng package.
-        if [[ X$(grep -E "Ubuntu|Debian" /etc/issue)X != XX ]]; then
-            jar=$(dpkg -L nailgun|grep "n-[0-9].[0-9].[0-9].jar")
-        fi
-        echo "starting nailgun with ${jar}"
+        case "$os" in
+            "Darwin" ) # We assume brew and /usr/local install here.
+                found_ng="$(find /usr/local -name "nailgun*jar"|head -n 1)"
+                if [[ X${found_ng}X != XX ]]; then
+                    jar="${found_ng}"
+                else
+                    "Nailgun setup to be used but not found. Please install 'brew install nailgun'"
+                fi
+                ;;
+            "Linux"  )
+                if [[ XX$(grep -E "Ubuntu|Debian" /etc/issue)X != XX ]]; then
+                    jar=$(dpkg -L nailgun|grep "n-[0-9].[0-9].[0-9].jar")
+                else
+                    "Nailgun setup to be used but not found. Please install"
+                fi
+                ;;
+            "Cygwin" )
+                ;;
+            * )
+                echo "Could not find matching OS for nailgun support";;
+        esac
+
         if [[ -n "${jar}" ]]; then
+            echo "starting nailgun with ${jar}"
             nohup java -server -jar "${jar}" &
             sleep 5
         else
             echo "use_nailgun set, but no jar found. OS/Distro supported?"
         fi
     fi
+}
+
+if [[ -n "$use_nailgun" ]]; then
+    nailgun-setup
 fi
+
 
 export IFS="
 "
@@ -94,7 +127,7 @@ function fetch-all {
         echo "Project: ${project}"
         for doc in $(${ccli}/confluence.sh --action getPageList --space "${project}" -u ${user} -p ${password} -s ${server}|grep -Ev "^$|pages in list"); do
             echo "Doc: ${doc}"
-            ${ccli}/confluence.sh --action getPageSource --space "${project}" --title "${doc}" -u ${user} -p ${password} -s ${server} |grep -v "^Page source$" > ${docroot}/${project}/"${doc/\//}"
+            time ${ccli}/confluence.sh --action getPageSource --space "${project}" --title "${doc}" -u ${user} -p ${password} -s ${server} |grep -v "^Page source$" > ${docroot}/${project}/"${doc/\//}"
         done
     done
     #cd ${docroot} && git add * && git commit -m "Update to $(date)" -a # if you wish to keep a local git copy
