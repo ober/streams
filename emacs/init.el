@@ -18,9 +18,9 @@
   (nxml-mode))
 
 
-(defun myput () (interactive) (setenv ATLASSIAN_PASSWORD identica-jira-password) (shell-command (format "/home/jaimef/streams/streams push \"%s\"" buffer-file-name)))
+(defun myput () (interactive) (setenv "ATLASSIAN_PASSWORD" identica-jira-password) (shell-command (format "/home/jaimef/streams/streams push \"%s\"" buffer-file-name)))
 (global-set-key [(f7)]  'myput)
-(defun myget () (interactive) (setenv ATLASSIAN_PASSWORD identica-jira-password) (shell-command (format "/home/jaimef/streams/streams pull \"%s\"" buffer-file-name) (revert-buffer t t nil)) (nxml-mode))
+(defun myget () (interactive) (setenv "ATLASSIAN_PASSWORD" identica-jira-password) (shell-command (format "/home/jaimef/streams/streams pull \"%s\"" buffer-file-name) (revert-buffer t t nil)) (nxml-mode))
 (global-set-key [(f8)]  'myget)
 (defun my-fetch-all () (interactive) (setenv "ATLASSIAN_PASSWORD" identica-jira-password) (shell-command "~/streams/streams fetch-all &" "confluence-fetch-all"))
 
