@@ -4,6 +4,11 @@
 # Script to wrap confluence cli to push/pull documents.
 #
 
+function handle_error {
+    echo "Error hit"
+    exit 2
+}
+
 trap 'trap - EXIT; handle_error; ' ERR
 
 # Defines required for the CLI. Can be set in ~/.streams.cfg
@@ -24,10 +29,6 @@ if [[ -f "$cfg" ]]; then
     source "$cfg"
 fi
 
-function handle_error {
-    echo "Error hit"
-    exit 2
-}
 
 function usage {
     cat <<EOF
